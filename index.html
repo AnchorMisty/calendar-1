@@ -18,6 +18,11 @@
     --white: #ffffff;
     --shadow: rgba(95, 141, 168, 0.18);
     --danger: #d99a9a;
+    --soft-danger: #f5dddd;
+    --success: #8eb79c;
+    --soft-success: #e5f3ea;
+    --warning: #c99b5b;
+    --soft-warning: #fff0d6;
   }
 
   * {
@@ -36,7 +41,7 @@
   }
 
   .app {
-    width: min(1180px, calc(100vw - 32px));
+    width: min(1220px, calc(100vw - 32px));
     min-height: calc(100vh - 32px);
     margin: 16px auto;
     display: grid;
@@ -79,9 +84,11 @@
     font-size: 13px;
   }
 
-  .nav {
+  .nav,
+  .button-row {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
   }
 
   button {
@@ -194,23 +201,46 @@
     opacity: 0.72;
   }
 
-  .right {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .task-count {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--soft-warning);
+    color: var(--warning);
+    font-size: 11px;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+    padding: 0 6px;
   }
 
-  .editor-header {
+  .right {
+    display: grid;
+    grid-template-rows: auto minmax(260px, 1fr) auto minmax(230px, 0.78fr) auto;
+    gap: 14px;
+    min-height: calc(100vh - 76px);
+  }
+
+  .editor-header,
+  .tasks-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
   }
 
-  .selected-date {
+  .selected-date,
+  .section-title {
     margin: 0;
     font-size: 24px;
     color: var(--blue-dark);
+  }
+
+  .section-title {
+    font-size: 20px;
   }
 
   .hint {
@@ -219,25 +249,129 @@
     font-size: 13px;
   }
 
-  textarea {
-    flex: 1;
-    min-height: 470px;
-    width: 100%;
+  textarea,
+  input[type="text"],
+  input[type="date"] {
     border: 1px solid rgba(159, 200, 223, 0.55);
-    border-radius: 22px;
     background: rgba(255, 255, 255, 0.7);
     color: var(--text);
-    padding: 18px;
-    font-size: 15px;
-    line-height: 1.75;
-    resize: none;
     outline: none;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
   }
 
-  textarea:focus {
+  textarea:focus,
+  input[type="text"]:focus,
+  input[type="date"]:focus {
     border-color: var(--blue-dark);
     background: #ffffff;
+  }
+
+  textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    border-radius: 22px;
+    padding: 18px;
+    font-size: 15px;
+    line-height: 1.75;
+    resize: none;
+  }
+
+  .task-form {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) 150px auto;
+    gap: 8px;
+    align-items: center;
+    background: rgba(227, 240, 247, 0.62);
+    border: 1px solid rgba(159, 200, 223, 0.35);
+    border-radius: 20px;
+    padding: 10px;
+  }
+
+  .task-form input {
+    width: 100%;
+    border-radius: 999px;
+    padding: 10px 12px;
+    font-family: inherit;
+  }
+
+  .task-list {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-right: 2px;
+  }
+
+  .task-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    background: rgba(255,255,255,0.72);
+    border: 1px solid rgba(159, 200, 223, 0.35);
+    border-radius: 18px;
+    padding: 10px;
+  }
+
+  .task-item.done {
+    opacity: 0.58;
+  }
+
+  .task-item.done .task-title {
+    text-decoration: line-through;
+  }
+
+  .task-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--blue-dark);
+    cursor: pointer;
+  }
+
+  .task-main {
+    min-width: 0;
+  }
+
+  .task-title {
+    font-weight: 800;
+    word-break: break-word;
+  }
+
+  .task-date {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .badge {
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 800;
+    background: var(--accent-2);
+    color: var(--blue-dark);
+  }
+
+  .badge.today-badge {
+    background: var(--soft-warning);
+    color: var(--warning);
+  }
+
+  .badge.overdue-badge {
+    background: var(--soft-danger);
+    color: #945f5f;
+  }
+
+  .badge.done-badge {
+    background: var(--soft-success);
+    color: var(--success);
+  }
+
+  .mini-btn {
+    padding: 7px 10px;
+    font-size: 12px;
   }
 
   .tools {
@@ -255,20 +389,72 @@
 
   .danger {
     color: #945f5f;
-    background: #f5dddd;
+    background: var(--soft-danger);
   }
 
   .danger:hover {
     background: #edc7c7;
   }
 
-  @media (max-width: 860px) {
+  .empty-tasks {
+    color: var(--muted);
+    text-align: center;
+    padding: 24px;
+    border: 1px dashed rgba(159, 200, 223, 0.72);
+    border-radius: 18px;
+    background: rgba(255,255,255,0.38);
+  }
+
+  @media (max-width: 900px) {
     .app {
       grid-template-columns: 1fr;
     }
 
-    textarea {
-      min-height: 300px;
+    .right {
+      min-height: auto;
+      grid-template-rows: auto 320px auto minmax(240px, auto) auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .app {
+      width: min(100vw - 18px, 1220px);
+      margin: 9px auto;
+    }
+
+    .panel {
+      padding: 16px;
+      border-radius: 22px;
+    }
+
+    .header,
+    .editor-header,
+    .tasks-header {
+      flex-direction: column;
+    }
+
+    .day {
+      min-height: 68px;
+      border-radius: 14px;
+      padding: 7px;
+    }
+
+    .note-preview {
+      display: none;
+    }
+
+    .task-form {
+      grid-template-columns: 1fr;
+    }
+
+    .task-item {
+      grid-template-columns: auto 1fr;
+    }
+
+    .task-item .badge,
+    .task-item .delete-task-btn {
+      grid-column: 2;
+      justify-self: start;
     }
   }
 </style>
@@ -279,7 +465,7 @@
       <div class="header">
         <div class="title-wrap">
           <h1>Calendar Notes</h1>
-          <div class="subtitle">点击日期编辑右侧备忘</div>
+          <div class="subtitle">低饱和蓝白小日历 · 点击日期编辑右侧备忘</div>
         </div>
         <div class="nav">
           <button id="prevBtn">←</button>
@@ -303,9 +489,25 @@
 
       <textarea id="noteEditor" placeholder="今天要记什么呢？"></textarea>
 
+      <div class="tasks-header">
+        <div>
+          <h2 class="section-title">Task List</h2>
+          <div class="hint">未完成任务会自动显示倒计时，完成后会排到后面。</div>
+        </div>
+      </div>
+
+      <section class="task-list-wrap">
+        <form class="task-form" id="taskForm">
+          <input id="taskTitleInput" type="text" placeholder="任务名，比如：上传网页 / 画草稿" />
+          <input id="taskDateInput" type="date" />
+          <button type="submit">添加</button>
+        </form>
+        <div class="task-list" id="taskList"></div>
+      </section>
+
       <div class="tools">
         <span class="status" id="saveStatus">已准备好</span>
-        <div>
+        <div class="button-row">
           <button id="exportBtn">导出 JSON</button>
           <button id="importBtn">导入 JSON</button>
           <button class="danger" id="clearBtn">清空当天</button>
@@ -316,7 +518,8 @@
   </main>
 
 <script>
-  const STORAGE_PREFIX = "pastel-calendar-note-";
+  const NOTE_PREFIX = "pastel-calendar-note-";
+  const TASKS_KEY = "pastel-calendar-tasks";
 
   const monthTitle = document.getElementById("monthTitle");
   const weekdays = document.getElementById("weekdays");
@@ -325,6 +528,10 @@
   const noteEditor = document.getElementById("noteEditor");
   const saveStatus = document.getElementById("saveStatus");
   const fileInput = document.getElementById("fileInput");
+  const taskForm = document.getElementById("taskForm");
+  const taskTitleInput = document.getElementById("taskTitleInput");
+  const taskDateInput = document.getElementById("taskDateInput");
+  const taskList = document.getElementById("taskList");
 
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
@@ -355,20 +562,42 @@
     return { year, month: month - 1, day };
   }
 
-  function getStorageKey(dateKey) {
-    return STORAGE_PREFIX + dateKey;
+  function dateFromKey(key) {
+    const { year, month, day } = parseDateKey(key);
+    return new Date(year, month, day);
+  }
+
+  function todayKey() {
+    const today = new Date();
+    return makeDateKey(today.getFullYear(), today.getMonth(), today.getDate());
+  }
+
+  function getNoteStorageKey(dateKey) {
+    return NOTE_PREFIX + dateKey;
   }
 
   function getNote(dateKey) {
-    return localStorage.getItem(getStorageKey(dateKey)) || "";
+    return localStorage.getItem(getNoteStorageKey(dateKey)) || "";
   }
 
   function setNote(dateKey, text) {
     if (text.trim()) {
-      localStorage.setItem(getStorageKey(dateKey), text);
+      localStorage.setItem(getNoteStorageKey(dateKey), text);
     } else {
-      localStorage.removeItem(getStorageKey(dateKey));
+      localStorage.removeItem(getNoteStorageKey(dateKey));
     }
+  }
+
+  function getTasks() {
+    try {
+      return JSON.parse(localStorage.getItem(TASKS_KEY) || "[]");
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function setTasks(tasks) {
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
   }
 
   function formatDateZh(key) {
@@ -388,6 +617,17 @@
     }[char]));
   }
 
+  function tasksByDate(dateKey) {
+    return getTasks().filter(task => task.due === dateKey && !task.done);
+  }
+
+  function taskTitlesPreview(dateKey) {
+    return tasksByDate(dateKey)
+      .map(task => task.title)
+      .filter(Boolean)
+      .join("；");
+  }
+
   function renderCalendar() {
     calendar.innerHTML = "";
 
@@ -395,7 +635,7 @@
     const month = current.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
-    const todayKey = makeDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+    const today = todayKey();
 
     monthTitle.textContent = `${year} 年 ${month + 1} 月`;
 
@@ -408,15 +648,18 @@
     for (let day = 1; day <= totalDays; day++) {
       const key = makeDateKey(year, month, day);
       const note = getNote(key);
+      const taskPreview = taskTitlesPreview(key);
+      const taskCount = tasksByDate(key).length;
       const div = document.createElement("div");
       div.className = "day";
-      if (key === todayKey) div.classList.add("today");
+      if (key === today) div.classList.add("today");
       if (key === selectedKey) div.classList.add("selected");
 
       div.innerHTML = `
         <div class="date">${day}</div>
-        <div class="note-preview">${note ? escapeHtml(note) : ""}</div>
-        ${note ? '<div class="dot"></div>' : ''}
+        <div class="note-preview">${taskPreview ? escapeHtml(taskPreview) : (note ? escapeHtml(note) : "")}</div>
+        ${(note || taskPreview) ? '<div class="dot"></div>' : ''}
+        ${taskCount > 1 ? `<div class="task-count">${taskCount}</div>` : ''}
       `;
 
       div.addEventListener("click", () => selectDate(key));
@@ -429,8 +672,9 @@
     selectedKey = key;
     selectedDateTitle.textContent = formatDateZh(key);
     noteEditor.value = getNote(key);
+    taskDateInput.value = key;
     saveStatus.textContent = "已切换日期";
-    renderCalendar();
+    renderAll();
   }
 
   function saveCurrentNote() {
@@ -439,22 +683,138 @@
     renderCalendar();
   }
 
+  function getDayDiff(dueKey) {
+    const today = dateFromKey(todayKey());
+    const due = dateFromKey(dueKey);
+    return Math.round((due - today) / 86400000);
+  }
+
+  function getBadgeHtml(task) {
+    if (task.done) return '<span class="badge done-badge">已完成</span>';
+
+    const diff = getDayDiff(task.due);
+    if (diff < 0) return `<span class="badge overdue-badge">逾期 ${Math.abs(diff)} 天</span>`;
+    if (diff === 0) return '<span class="badge today-badge">今天截止</span>';
+    return `<span class="badge">还有 ${diff} 天</span>`;
+  }
+
+  function ensureTaskIds(tasks) {
+    let changed = false;
+    const normalized = tasks.map(task => {
+      if (task.id) return task;
+      changed = true;
+      return {
+        ...task,
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())
+      };
+    });
+    if (changed) setTasks(normalized);
+    return normalized;
+  }
+
+  function renderTasks() {
+    const tasks = ensureTaskIds(getTasks()).slice().sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      return a.due.localeCompare(b.due);
+    });
+
+    taskList.innerHTML = "";
+
+    if (!tasks.length) {
+      taskList.innerHTML = '<div class="empty-tasks">还没有任务。给未来的自己塞一张小纸条吧。</div>';
+      return;
+    }
+
+    tasks.forEach(task => {
+      const item = document.createElement("div");
+      item.className = `task-item ${task.done ? "done" : ""}`;
+      item.innerHTML = `
+        <input class="task-checkbox" type="checkbox" ${task.done ? "checked" : ""} aria-label="切换完成状态" />
+        <div class="task-main">
+          <div class="task-title">${escapeHtml(task.title)}</div>
+          <div class="task-date">截止：${formatDateZh(task.due)}</div>
+        </div>
+        ${getBadgeHtml(task)}
+        <button class="mini-btn danger delete-task-btn" type="button">删除</button>
+      `;
+
+      item.querySelector(".task-checkbox").addEventListener("change", event => {
+        toggleTask(task.id, event.target.checked);
+      });
+
+      item.querySelector(".delete-task-btn").addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        deleteTask(task.id);
+      });
+
+      taskList.appendChild(item);
+    });
+  }
+
+  function renderAll() {
+    renderCalendar();
+    renderTasks();
+  }
+
+  function addTask(title, due) {
+    const tasks = getTasks();
+    tasks.push({
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+      title,
+      due,
+      done: false,
+      createdAt: new Date().toISOString()
+    });
+    setTasks(tasks);
+    saveStatus.textContent = "已添加任务";
+    renderAll();
+  }
+
+  function toggleTask(id, done) {
+    const tasks = getTasks().map(task => task.id === id ? { ...task, done } : task);
+    setTasks(tasks);
+    saveStatus.textContent = done ? "任务已完成" : "任务已恢复";
+    renderAll();
+  }
+
+  function deleteTask(id) {
+    const tasks = ensureTaskIds(getTasks()).filter(task => task.id !== id);
+    setTasks(tasks);
+    saveStatus.textContent = "任务已删除";
+    renderAll();
+  }
+
   noteEditor.addEventListener("input", () => {
     saveStatus.textContent = "正在输入……";
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveCurrentNote, 350);
   });
 
+  taskForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const title = taskTitleInput.value.trim();
+    const due = taskDateInput.value || selectedKey;
+    if (!title) {
+      saveStatus.textContent = "先写任务名喔";
+      taskTitleInput.focus();
+      return;
+    }
+    addTask(title, due);
+    taskTitleInput.value = "";
+    taskTitleInput.focus();
+  });
+
   prevBtn.addEventListener("click", () => {
     saveCurrentNote();
     current.setMonth(current.getMonth() - 1);
-    renderCalendar();
+    renderAll();
   });
 
   nextBtn.addEventListener("click", () => {
     saveCurrentNote();
     current.setMonth(current.getMonth() + 1);
-    renderCalendar();
+    renderAll();
   });
 
   todayBtn.addEventListener("click", () => {
@@ -465,20 +825,27 @@
   });
 
   clearBtn.addEventListener("click", () => {
-    if (!confirm("确定要清空当天备忘吗？")) return;
     noteEditor.value = "";
     saveCurrentNote();
+    saveStatus.textContent = "当天备忘已清空";
   });
 
   exportBtn.addEventListener("click", () => {
     saveCurrentNote();
-    const data = {};
+    const notes = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && key.startsWith(STORAGE_PREFIX)) {
-        data[key.replace(STORAGE_PREFIX, "")] = localStorage.getItem(key);
+      if (key && key.startsWith(NOTE_PREFIX)) {
+        notes[key.replace(NOTE_PREFIX, "")] = localStorage.getItem(key);
       }
     }
+
+    const data = {
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      notes,
+      tasks: getTasks()
+    };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -499,11 +866,24 @@
     try {
       const text = await file.text();
       const data = JSON.parse(text);
-      Object.entries(data).forEach(([dateKey, value]) => {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
-          setNote(dateKey, String(value));
+
+      if (data.version === 2 && data.notes) {
+        Object.entries(data.notes).forEach(([dateKey, value]) => {
+          if (/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
+            setNote(dateKey, String(value));
+          }
+        });
+        if (Array.isArray(data.tasks)) {
+          setTasks(data.tasks);
         }
-      });
+      } else {
+        Object.entries(data).forEach(([dateKey, value]) => {
+          if (/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
+            setNote(dateKey, String(value));
+          }
+        });
+      }
+
       selectDate(selectedKey);
       saveStatus.textContent = "导入成功";
     } catch (error) {
